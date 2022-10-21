@@ -9,17 +9,6 @@ services:
     volumes:
       - ./java:/srv:cached
     working_dir: /srv
-  react:
-    build: 
-      context: ./react
-      dockerfile: Dockerfile
-    # ホスト側のディレクトリをコンテナ側のディレクトリにマウントする
-    volumes:
-      - ./react/src:/usr/src/app/
-    expose:
-      - 3000
-    tty: true
-    network_mode: "host"
   postgres:
     image: postgres:latest
     expose:
