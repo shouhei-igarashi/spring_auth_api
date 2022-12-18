@@ -2,11 +2,14 @@ package com.farmec.project.presentation.config.jwt;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.farmec.project.domain.model.security.MyUserDetails;
 
@@ -65,5 +68,15 @@ public class JwtUtils {
         }
 
         return false;
+    }
+
+    public String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7, headerAuth.length());
+        }
+
+        return null;
     }
 }

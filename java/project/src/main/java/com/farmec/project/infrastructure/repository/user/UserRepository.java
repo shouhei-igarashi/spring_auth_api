@@ -1,4 +1,4 @@
-package com.farmec.project.infrastructure.repository.security;
+package com.farmec.project.infrastructure.repository.user;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.farmec.project.infrastructure.entity.user.User;
 
 @Repository
-public interface SecurityUserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);

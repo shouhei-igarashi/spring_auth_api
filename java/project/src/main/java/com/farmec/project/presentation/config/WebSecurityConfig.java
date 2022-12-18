@@ -1,7 +1,7 @@
 package com.farmec.project.presentation.config;
 
 import com.farmec.project.application.service.security.impl.UserDetailsServiceImpl;
-import com.farmec.project.domain.type.Roles;
+import com.farmec.project.domain.type.secure.auth.Roles;
 import com.farmec.project.presentation.config.jwt.JwtTokenEndPoint;
 import com.farmec.project.presentation.config.jwt.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
                 .antMatchers("/api/home/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/admin/**").hasAnyAuthority(Roles.ROLE_ADMIN.name())
-                .antMatchers(HttpMethod.POST, "/api/user/**").hasAnyAuthority(Roles.ROLE_ADMIN.name(), Roles.ROLE_USER.name())
+                .antMatchers(HttpMethod.POST, "/api/user/**", "/api/user/detail/**").hasAnyAuthority(Roles.ROLE_ADMIN.name(), Roles.ROLE_USER.name())
                 .anyRequest()
                 .authenticated();
 

@@ -1,24 +1,21 @@
 package com.farmec.project.application.service.security.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.farmec.project.application.service.security.SignUpService;
 import com.farmec.project.domain.model.security.ResultSignUp;
 import com.farmec.project.domain.model.security.SignUp;
 import com.farmec.project.infrastructure.entity.user.User;
-import com.farmec.project.infrastructure.repository.security.SecurityUserRepository;
+import com.farmec.project.infrastructure.repository.user.UserRepository;
 
 @Service
 public class SignUpServiceImpl implements SignUpService {
-    private final SecurityUserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
+    private final UserRepository userRepository;
+    
     @Autowired
-    public SignUpServiceImpl(SecurityUserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public SignUpServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -27,11 +24,12 @@ public class SignUpServiceImpl implements SignUpService {
             return new ResultSignUp(false, "アカウントは既に存在します");
         }
 
-        User user = new User(signUp.getEmail().toString()
-            , passwordEncoder.encode(signUp.getPassword().toString())
-            , signUp.getRole().name());
+        User user = new User(signUp);
 
-        userRepository.save(user);
-        return new ResultSignUp(true, "アカウント登録に成功しました"); 
+        if (userRepository.save(user) != null) {
+            return new ResultSignUp(true, "アカウント登録に成功しました"); 
+        }
+        
+        return new ResultSignUp(false, "アカウントの登録に失敗しました。");
     }
 }

@@ -1,4 +1,4 @@
-package com.farmec.project.domain.type;
+package com.farmec.project.domain.type.key;
 
 import javax.validation.constraints.*;
 

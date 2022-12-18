@@ -1,26 +1,18 @@
 package com.farmec.project.infrastructure.entity.user;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.farmec.project.domain.model.account.Account;
 
+import javax.persistence.*;
+
 @Entity
-@Table(name = "user_details", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
-public class UserDetail {
+@Table(name = "user_detail_histories", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
+public class UserDetailHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,14 +43,14 @@ public class UserDetail {
     @Column(name="phone_number", nullable = false)
     private String phoneNumber;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "email")
     private User user;
     
-    public UserDetail() {
+    public UserDetailHistory() {
     }
 
-    public UserDetail(Account account, User user) {
+    public UserDetailHistory(Account account, User user) {
         this.user = user;
         firstName = account.getFirstName().toString();
         lastName = account.getLastName().toString();

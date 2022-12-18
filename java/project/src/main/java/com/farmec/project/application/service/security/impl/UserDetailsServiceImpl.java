@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.farmec.project.domain.model.security.MyUserDetails;
 import com.farmec.project.infrastructure.entity.user.User;
-import com.farmec.project.infrastructure.repository.security.SecurityUserRepository;
+import com.farmec.project.infrastructure.repository.user.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final SecurityUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(SecurityUserRepository userRepository)
+    public UserDetailsServiceImpl(UserRepository userRepository)
     {
         this.userRepository = userRepository;
     }
