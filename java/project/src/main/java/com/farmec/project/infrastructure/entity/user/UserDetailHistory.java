@@ -11,7 +11,7 @@ import com.farmec.project.domain.model.account.Account;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user_detail_histories", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
+@Table(name = "user_detail_histories")
 public class UserDetailHistory {
 
     @Id
@@ -44,7 +44,7 @@ public class UserDetailHistory {
     private String phoneNumber;
 
     @ManyToOne
-    @JoinColumn(name = "email")
+    @PrimaryKeyJoinColumn(name = "email")
     private User user;
     
     public UserDetailHistory() {
