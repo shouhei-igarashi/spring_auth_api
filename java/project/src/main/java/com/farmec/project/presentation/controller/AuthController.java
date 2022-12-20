@@ -45,7 +45,8 @@ public class AuthController {
         MyUserDetails userDetails = signInService.getMyUserDetails(signIn);
         String jwt = jwtUtils.generateJwtToken(userDetails.getAuthentication());
 
-        return ResponseEntity.ok(new JwtToken(jwt, userDetails.getUsername(), userDetails.getRole()));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new JwtToken(jwt, userDetails.getUsername(), userDetails.getRole()));
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
@@ -54,14 +55,14 @@ public class AuthController {
         RoleMessage roleMessage = new RoleMessage(signUpResult.getMessage());
 
         return signUpResult.isSuccess()
-                ? ResponseEntity.status(HttpStatus.OK).body(roleMessage)
+                ? ResponseEntity.status(HttpStatus.CREATED).body(roleMessage)
                 : ResponseEntity.badRequest().body(roleMessage);
     }
 
     @RequestMapping(value = "/signout", method = RequestMethod.POST)
     public ResponseEntity<?> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new RoleMessage("You've been signed out!"));
     }
 }

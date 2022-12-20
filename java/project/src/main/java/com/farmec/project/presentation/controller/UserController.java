@@ -39,7 +39,9 @@ public class UserController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<?> regist(@AuthenticationPrincipal MyUserDetails myUserDetails,  @Valid @RequestBody Account account) {
         account.setAuthUserEMailAddress(new EmailAddress(myUserDetails.getUsername()));
-        accountRecordService.registAccount(account);
-        return  ResponseEntity.status(HttpStatus.CREATED).body(new RoleMessage("登録成功"));
+        Boolean isSuccess = accountRecordService.createAccount(account);
+        return  isSuccess ? 
+            ResponseEntity.status(HttpStatus.CREATED).body(new RoleMessage("登録成功")) 
+            : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new RoleMessage("登録失敗"));
     }
 }
