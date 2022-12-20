@@ -1,4 +1,4 @@
-package com.farmec.project.application.service.security.impl;
+package com.farmec.project.application.service.secure;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,25 +6,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.farmec.project.domain.model.security.MyUserDetails;
-import com.farmec.project.infrastructure.entity.user.User;
-import com.farmec.project.infrastructure.repository.user.UserRepository;
+import com.farmec.project.application.infrastructure.UserRepository;
+import com.farmec.project.domain.model.secure.MyUserDetails;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository)
-    {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new UsernameNotFoundException("アカウントが見つかりませんでした。 " + email));
+        MyUserDetails myUserDetails = userRepository.findByEmail(email);
+        myUserDetails.checkUser();
 
-    return MyUserDetails.build(user);
+        return myUserDetails;
     }
 }

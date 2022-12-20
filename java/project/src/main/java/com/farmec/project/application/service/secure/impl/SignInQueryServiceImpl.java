@@ -1,4 +1,4 @@
-package com.farmec.project.application.service.security.impl;
+package com.farmec.project.application.service.secure.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,19 +7,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.farmec.project.application.service.security.SignInService;
-import com.farmec.project.domain.model.security.MyUserDetails;
-import com.farmec.project.domain.model.security.SignIn;
-import com.farmec.project.presentation.config.jwt.JwtUtils;
+import com.farmec.project.application.service.secure.SignInQueryService;
+import com.farmec.project.domain.model.secure.MyUserDetails;
+import com.farmec.project.domain.model.secure.SignIn;
 
 @Service
-public class SignInServiceImpl implements SignInService {
-    private final JwtUtils jwtUtils;
+public class SignInQueryServiceImpl implements SignInQueryService {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public SignInServiceImpl(JwtUtils jwtUtils, AuthenticationManager authenticationManager) {
-        this.jwtUtils = jwtUtils;
+    public SignInQueryServiceImpl(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
     
@@ -29,11 +26,6 @@ public class SignInServiceImpl implements SignInService {
                 new UsernamePasswordAuthenticationToken(signIn.getEmail().toString(), signIn.getPassword().toString()));
         
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-        userDetails.setJwtToken(jwt);
-
-        return userDetails;
+        return MyUserDetails.build(authentication);
     }
 }

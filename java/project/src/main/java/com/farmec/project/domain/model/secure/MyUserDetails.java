@@ -1,15 +1,18 @@
-package com.farmec.project.domain.model.security;
+package com.farmec.project.domain.model.secure;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import javax.security.auth.message.AuthException;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.farmec.project.infrastructure.entity.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MyUserDetails implements UserDetails {
@@ -22,29 +25,52 @@ public class MyUserDetails implements UserDetails {
 
     private String role;
 
-    private String jwt;
-
     private Collection<? extends GrantedAuthority> authorities;
+
+    private Boolean isNotFound;
+
+    private Authentication authentication;
+
+    public MyUserDetails() {
+        isNotFound = true;
+    }
+
+    public MyUserDetails(String username) {
+        this.username = username;
+        isNotFound = true;
+    }
 
     public MyUserDetails(String username, String password) {
         this.username = username;
         this.password = password;
+        
+        isNotFound = false;
     }
 
     public MyUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
-        
+
+        isNotFound = false;
     }
 
-    public static MyUserDetails build(User user) {
+    public MyUserDetails(String username, String password, String role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole()));
-        return new MyUserDetails(
-                user.getEmail(),
-                user.getPassword(),
-                authorities);
+        authorities.add(new SimpleGrantedAuthority(role));
+
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+
+        isNotFound = false;
+    }
+
+    public static MyUserDetails build(Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        myUserDetails.setAuthentication(authentication);
+
+        return myUserDetails;
     }
 
     @Override
@@ -68,8 +94,8 @@ public class MyUserDetails implements UserDetails {
         return role;
     }
 
-    public String getJwt() {
-        return jwt;
+    public Authentication getAuthentication() {
+        return authentication;
     }
 
     @Override
@@ -107,8 +133,13 @@ public class MyUserDetails implements UserDetails {
         return Objects.equals(username, user.username);
     }
 
-    public void setJwtToken (String jwt)
-    {
-        this.jwt = jwt; 
+    public void checkUser() {
+        if (isNotFound) {
+           throw new UsernameNotFoundException("アカウントが見つかりませんでした。 " + username);
+        }
+    }
+
+    private void setAuthentication(Authentication authentication) {
+        this.authentication = authentication;
     }
 }

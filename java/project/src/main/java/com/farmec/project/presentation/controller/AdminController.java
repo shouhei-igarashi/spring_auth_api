@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.farmec.project.presentation.payload.security.response.RoleMessage;
+import com.farmec.project.presentation.payload.response.RoleMessage;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

@@ -10,18 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.farmec.project.application.service.security.SignInService;
-import com.farmec.project.application.service.security.SignUpService;
-import com.farmec.project.domain.model.security.MyUserDetails;
-import com.farmec.project.domain.model.security.ResultSignUp;
+import com.farmec.project.application.service.secure.SignInQueryService;
+import com.farmec.project.application.service.secure.signup.SignUpService;
+import com.farmec.project.domain.model.secure.MyUserDetails;
+import com.farmec.project.domain.model.secure.SignIn;
+import com.farmec.project.domain.model.secure.SignUp;
+import com.farmec.project.domain.model.secure.SignUpResult;
 import com.farmec.project.presentation.config.jwt.JwtUtils;
-import com.farmec.project.domain.model.security.SignIn;
-import com.farmec.project.domain.model.security.SignUp;
-import com.farmec.project.presentation.payload.security.response.JwtToken;
-import com.farmec.project.presentation.payload.security.response.RoleMessage;
+import com.farmec.project.presentation.payload.response.JwtToken;
+import com.farmec.project.presentation.payload.response.RoleMessage;
 
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -29,11 +30,11 @@ import org.springframework.http.HttpHeaders;
 public class AuthController {
     private final JwtUtils jwtUtils;
 
-    private final SignInService signInService;
+    private final SignInQueryService signInService;
     private final SignUpService signUpService;
 
     @Autowired
-    public AuthController(SignInService signInService, SignUpService signUpService, JwtUtils jwtUtils) {
+    public AuthController(SignInQueryService signInService, SignUpService signUpService, JwtUtils jwtUtils) {
         this.signInService = signInService;
         this.signUpService = signUpService;
         this.jwtUtils = jwtUtils;
@@ -42,19 +43,18 @@ public class AuthController {
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody SignIn signIn) {
         MyUserDetails userDetails = signInService.getMyUserDetails(signIn);
+        String jwt = jwtUtils.generateJwtToken(userDetails.getAuthentication());
 
-        return ResponseEntity.ok(new JwtToken(userDetails.getJwt(),
-                userDetails.getUsername(),
-                userDetails.getRole()));
+        return ResponseEntity.ok(new JwtToken(jwt, userDetails.getUsername(), userDetails.getRole()));
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUp signUp) {
-        ResultSignUp resultSignUp = signUpService.createUser(signUp);
-        RoleMessage roleMessage = new RoleMessage(resultSignUp.getMessage());
+        SignUpResult signUpResult = signUpService.createUser(signUp);
+        RoleMessage roleMessage = new RoleMessage(signUpResult.getMessage());
 
-        return resultSignUp.getResult()
-                ? ResponseEntity.ok(roleMessage)
+        return signUpResult.isSuccess()
+                ? ResponseEntity.status(HttpStatus.OK).body(roleMessage)
                 : ResponseEntity.badRequest().body(roleMessage);
     }
 

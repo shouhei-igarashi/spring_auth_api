@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.farmec.project.domain.model.security.MyUserDetails;
+import com.farmec.project.domain.model.secure.MyUserDetails;
 
 import io.jsonwebtoken.*;
 import org.springframework.http.ResponseCookie;

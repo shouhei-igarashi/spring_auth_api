@@ -1,4 +1,4 @@
-package com.farmec.project.presentation.payload.security.response;
+package com.farmec.project.presentation.payload.response;
 
 public class JwtToken {
   private String token;

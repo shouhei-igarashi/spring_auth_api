@@ -10,19 +10,19 @@ import com.farmec.project.domain.model.account.Account;
 import com.farmec.project.infrastructure.entity.user.User;
 import com.farmec.project.infrastructure.entity.user.UserDetail;
 import com.farmec.project.infrastructure.entity.user.UserDetailHistory;
-import com.farmec.project.infrastructure.repository.user.UserDetailHistoryRepository;
-import com.farmec.project.infrastructure.repository.user.UserDetailRepository;
-import com.farmec.project.infrastructure.repository.user.UserRepository;
+import com.farmec.project.infrastructure.repository.user.jpa.UserDetailHistoryJpaRepository;
+import com.farmec.project.infrastructure.repository.user.jpa.UserDetailJpaRepository;
+import com.farmec.project.infrastructure.repository.user.jpa.UserJpaRepository;
 
 @Service
 public class AccountRecordServiceImpl implements AccountRecordService {
-    private final UserRepository userRepository;
-    private final UserDetailRepository userDetailRepository;
-    private final UserDetailHistoryRepository userDetailHistoryRepository;
+    private final UserJpaRepository userRepository;
+    private final UserDetailJpaRepository userDetailRepository;
+    private final UserDetailHistoryJpaRepository userDetailHistoryRepository;
 
     @Autowired
-    public AccountRecordServiceImpl(UserRepository userRepository, UserDetailRepository userDetailRepository
-    , UserDetailHistoryRepository userDetailHistoryRepository) {
+    public AccountRecordServiceImpl(UserJpaRepository userRepository, UserDetailJpaRepository userDetailRepository
+    , UserDetailHistoryJpaRepository userDetailHistoryRepository) {
         this.userRepository = userRepository;
         this.userDetailRepository = userDetailRepository;
         this.userDetailHistoryRepository = userDetailHistoryRepository;

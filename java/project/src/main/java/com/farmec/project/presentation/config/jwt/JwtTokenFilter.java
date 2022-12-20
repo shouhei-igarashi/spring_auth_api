@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.farmec.project.application.service.security.impl.UserDetailsServiceImpl;
+import com.farmec.project.application.service.secure.UserDetailsServiceImpl;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {

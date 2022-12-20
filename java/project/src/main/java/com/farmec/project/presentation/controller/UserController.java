@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.farmec.project.application.service.account.AccountRecordService;
 import com.farmec.project.domain.model.account.Account;
-import com.farmec.project.domain.model.security.MyUserDetails;
+import com.farmec.project.domain.model.secure.MyUserDetails;
 import com.farmec.project.domain.type.key.EmailAddress;
-import com.farmec.project.presentation.payload.security.response.RoleMessage;
+import com.farmec.project.presentation.payload.response.RoleMessage;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

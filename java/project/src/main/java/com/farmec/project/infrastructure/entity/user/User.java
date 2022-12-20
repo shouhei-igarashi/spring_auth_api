@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.farmec.project.domain.model.account.Account;
-import com.farmec.project.domain.model.security.SignUp;
+import com.farmec.project.domain.model.secure.SignUp;
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
 public class User {

@@ -1,6 +1,6 @@
 package com.farmec.project.presentation.config;
 
-import com.farmec.project.application.service.security.impl.UserDetailsServiceImpl;
+import com.farmec.project.application.service.secure.UserDetailsServiceImpl;
 import com.farmec.project.domain.type.secure.auth.Roles;
 import com.farmec.project.presentation.config.jwt.JwtTokenEndPoint;
 import com.farmec.project.presentation.config.jwt.JwtTokenFilter;
