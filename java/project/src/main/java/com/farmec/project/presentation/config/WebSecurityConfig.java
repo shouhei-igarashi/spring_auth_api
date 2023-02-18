@@ -4,7 +4,6 @@ import com.farmec.project.application.service.secure.UserDetailsServiceImpl;
 import com.farmec.project.domain.type.secure.auth.Roles;
 import com.farmec.project.presentation.config.jwt.JwtTokenEndPoint;
 import com.farmec.project.presentation.config.jwt.JwtTokenFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,7 +25,6 @@ public class WebSecurityConfig {
     private final JwtTokenEndPoint jwtTokenEndPoint;
     private final JwtTokenFilter jwtTokenFilter;
     
-    @Autowired
     public WebSecurityConfig(UserDetailsServiceImpl userDetailService, JwtTokenEndPoint jwtTokenEndPoint, JwtTokenFilter jwtTokenFilter)
     {
         this.userDetailService = userDetailService;

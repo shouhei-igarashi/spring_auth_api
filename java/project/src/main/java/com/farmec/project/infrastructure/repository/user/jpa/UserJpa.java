@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.farmec.project.infrastructure.entity.user.User;
 
-public interface UserJpaRepository extends JpaRepository<User, Long> {
+public interface UserJpa extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);

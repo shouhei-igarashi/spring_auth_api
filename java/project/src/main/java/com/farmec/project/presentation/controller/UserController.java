@@ -2,7 +2,6 @@ package com.farmec.project.presentation.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,24 +19,25 @@ import com.farmec.project.presentation.payload.response.RoleMessage;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/user/detail")
+@RequestMapping("/api/user")
 public class UserController {
     private final AccountRecordService accountRecordService;
 
-    @Autowired
     public UserController(AccountRecordService accountRecordService) {
         this.accountRecordService = accountRecordService;
     }
 
-    
-    @RequestMapping(value = "/index", method = RequestMethod.POST)
-    public ResponseEntity<?> index() {
-        
-        return  ResponseEntity.ok(new RoleMessage("user成功したよ!"));
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseEntity<?> create(@AuthenticationPrincipal MyUserDetails myUserDetails,  @Valid @RequestBody Account account) {
+        account.setAuthUserEMailAddress(new EmailAddress(myUserDetails.getUsername()));
+        Boolean isSuccess = accountRecordService.createAccount(account);
+        return  isSuccess ? 
+            ResponseEntity.status(HttpStatus.CREATED).body(new RoleMessage("登録成功")) 
+            : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new RoleMessage("登録失敗"));
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<?> regist(@AuthenticationPrincipal MyUserDetails myUserDetails,  @Valid @RequestBody Account account) {
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    public ResponseEntity<?> find(@AuthenticationPrincipal MyUserDetails myUserDetails,  @Valid @RequestBody Account account) {
         account.setAuthUserEMailAddress(new EmailAddress(myUserDetails.getUsername()));
         Boolean isSuccess = accountRecordService.createAccount(account);
         return  isSuccess ? 

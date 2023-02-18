@@ -14,20 +14,16 @@ import org.springframework.util.StringUtils;
 import com.farmec.project.domain.model.secure.MyUserDetails;
 
 import io.jsonwebtoken.*;
-import org.springframework.http.ResponseCookie;
 
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${farmec.app.jwtSecret}")
+    @Value("${auth.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${farmec.app.jwtExpirationMs}")
+    @Value("${auth.app.jwtExpirationMs}")
     private int jwtExpirationMs;
-
-    @Value("${farmec.app.jwtCookieName}")
-    private String jwtCookie;
 
     public String generateJwtToken(Authentication authentication) {
 
@@ -43,11 +39,6 @@ public class JwtUtils {
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
-        return cookie;
     }
 
     public boolean validateJwtToken(String authToken) {
@@ -77,6 +68,6 @@ public class JwtUtils {
             return headerAuth.substring(7, headerAuth.length());
         }
 
-        return null;
+        return headerAuth;
     }
 }

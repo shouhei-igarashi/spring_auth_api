@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import javax.security.auth.message.AuthException;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

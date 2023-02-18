@@ -2,7 +2,6 @@ package com.farmec.project.domain.type.secure.auth;
 
 import javax.validation.constraints.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

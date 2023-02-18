@@ -2,7 +2,6 @@ package com.farmec.project.infrastructure.repository.user;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -10,17 +9,16 @@ import com.farmec.project.application.infrastructure.UserDetailHistoryRepository
 import com.farmec.project.domain.model.account.Account;
 import com.farmec.project.infrastructure.entity.user.User;
 import com.farmec.project.infrastructure.entity.user.UserDetailHistory;
-import com.farmec.project.infrastructure.repository.user.jpa.UserDetailHistoryJpaRepository;
-import com.farmec.project.infrastructure.repository.user.jpa.UserJpaRepository;
+import com.farmec.project.infrastructure.repository.user.jpa.UserDetailHistoryJpa;
+import com.farmec.project.infrastructure.repository.user.jpa.UserJpa;
 
 @Repository
 public class UserDetailHistoryReposiotyImpl implements UserDetailHistoryRepository {
-    private final UserJpaRepository userJpaRepository;
-    private final UserDetailHistoryJpaRepository userDetailHistoryJpaRepository;
+    private final UserJpa userJpaRepository;
+    private final UserDetailHistoryJpa userDetailHistoryJpaRepository;
 
-    @Autowired
-    public UserDetailHistoryReposiotyImpl(UserJpaRepository userJpaRepository
-        , UserDetailHistoryJpaRepository userDetailHistoryJpaRepository) {
+    public UserDetailHistoryReposiotyImpl(UserJpa userJpaRepository
+        , UserDetailHistoryJpa userDetailHistoryJpaRepository) {
             this.userJpaRepository = userJpaRepository;
             this.userDetailHistoryJpaRepository = userDetailHistoryJpaRepository;
     }

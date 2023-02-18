@@ -9,6 +9,14 @@ public class SignUp {
     private Password password;
     private Role role;
 
+    public SignUp() {}
+
+    public SignUp(EmailAddress email, Password password, Role role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     public EmailAddress getEmail() {
         return email;
     }
@@ -24,4 +32,8 @@ public class SignUp {
         
         return role;
     }
+
+    public SignUp build(String roleStr) {
+        return new SignUp(email, password, new Role(roleStr));
+    } 
 }

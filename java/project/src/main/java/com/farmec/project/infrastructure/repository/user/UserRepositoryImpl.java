@@ -2,7 +2,6 @@ package com.farmec.project.infrastructure.repository.user;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.farmec.project.application.infrastructure.UserRepository;
@@ -10,15 +9,14 @@ import com.farmec.project.domain.model.secure.MyUserDetails;
 import com.farmec.project.domain.model.secure.SignUp;
 import com.farmec.project.domain.model.secure.SignUpResult;
 import com.farmec.project.infrastructure.entity.user.User;
-import com.farmec.project.infrastructure.repository.user.jpa.UserJpaRepository;
+import com.farmec.project.infrastructure.repository.user.jpa.UserJpa;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserJpa userJpaRepository;
     
-    @Autowired
-    public UserRepositoryImpl(UserJpaRepository userJpaRepository) {
+    public UserRepositoryImpl(UserJpa userJpaRepository) {
         this.userJpaRepository = userJpaRepository;
     }
 

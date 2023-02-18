@@ -2,13 +2,14 @@ version: '3.6'
 services:
   java:
     image: openjdk:17
-    expose:
-      - 8080
-    network_mode: "host"
+    ports:
+      - 5050:5050
     tty: true
     volumes:
       - ./java:/srv:cached
     working_dir: /srv
+    depends_on:
+      - postgres
   postgres:
     image: postgres:latest
     expose:

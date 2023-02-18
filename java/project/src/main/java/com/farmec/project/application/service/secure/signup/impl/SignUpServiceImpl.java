@@ -1,6 +1,5 @@
 package com.farmec.project.application.service.secure.signup.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.farmec.project.application.service.secure.signup.SignUpService;
@@ -14,18 +13,18 @@ public class SignUpServiceImpl implements SignUpService {
     private final SignUpQueryService signUpQueryService;
     private final SignUpRecordService signUpRecordService;
     
-    @Autowired
     public SignUpServiceImpl(SignUpQueryService signUpQueryService, SignUpRecordService signUpRecordService) {
         this.signUpQueryService = signUpQueryService;
         this.signUpRecordService = signUpRecordService;
     }
 
     @Override
-    public SignUpResult createUser(SignUp signUp) {
+    public SignUpResult createUser(SignUp signUp, String role) {
         if (signUpQueryService.existsSignUpUser(signUp)) {
             return new SignUpResult(true, "既に登録済みです");
         }
 
-        return signUpRecordService.createSignUp(signUp);
+
+        return signUpRecordService.createSignUp(signUp.build(role));
     }
 }

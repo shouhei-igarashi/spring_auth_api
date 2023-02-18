@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.farmec.project.infrastructure.entity.user.UserDetail;
 
-public interface UserDetailJpaRepository extends JpaRepository<UserDetail, Long> {
+public interface UserDetailJpa extends JpaRepository<UserDetail, Long> {
     @Query(value = "select * from user_details where email = :email", nativeQuery = true)
     List<UserDetail> findByEmail(@Param("email") String email);
 }

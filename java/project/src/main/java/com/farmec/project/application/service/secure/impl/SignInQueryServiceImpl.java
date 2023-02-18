@@ -1,6 +1,5 @@
 package com.farmec.project.application.service.secure.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,7 +14,6 @@ import com.farmec.project.domain.model.secure.SignIn;
 public class SignInQueryServiceImpl implements SignInQueryService {
     private final AuthenticationManager authenticationManager;
 
-    @Autowired
     public SignInQueryServiceImpl(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }

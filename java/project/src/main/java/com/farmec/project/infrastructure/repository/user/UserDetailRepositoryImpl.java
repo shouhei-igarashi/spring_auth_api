@@ -3,7 +3,6 @@ package com.farmec.project.infrastructure.repository.user;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -11,16 +10,15 @@ import com.farmec.project.application.infrastructure.UserDetailRepository;
 import com.farmec.project.domain.model.account.Account;
 import com.farmec.project.infrastructure.entity.user.User;
 import com.farmec.project.infrastructure.entity.user.UserDetail;
-import com.farmec.project.infrastructure.repository.user.jpa.UserDetailJpaRepository;
-import com.farmec.project.infrastructure.repository.user.jpa.UserJpaRepository;
+import com.farmec.project.infrastructure.repository.user.jpa.UserDetailJpa;
+import com.farmec.project.infrastructure.repository.user.jpa.UserJpa;
 
 @Repository
 public class UserDetailRepositoryImpl implements UserDetailRepository {
-    private final UserJpaRepository userJpaRepository;
-    private final UserDetailJpaRepository userDetailJpaRepository;
+    private final UserJpa userJpaRepository;
+    private final UserDetailJpa userDetailJpaRepository;
 
-    @Autowired
-    public UserDetailRepositoryImpl(UserJpaRepository userJpaRepository, UserDetailJpaRepository userDetailJpaRepository) {
+    public UserDetailRepositoryImpl(UserJpa userJpaRepository, UserDetailJpa userDetailJpaRepository) {
         this.userJpaRepository = userJpaRepository;
         this.userDetailJpaRepository = userDetailJpaRepository;
     }
