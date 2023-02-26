@@ -36,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Boolean existsByUserDetailsImpl(UserDetailsImpl userDetails) {
-        List<User> users = userJpa.findByRole(userDetails.getUsername(), userDetails.getRole());
+        List<User> users = userJpa.findByEmailAndRole(userDetails.getUsername(), userDetails.getRole());
         return users.size() > 0 ? true : false;
     }
 
