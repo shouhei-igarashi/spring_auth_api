@@ -4,9 +4,17 @@ import com.farmec.project.domain.type.key.EmailAddress;
 import com.farmec.project.domain.type.secure.auth.Password;
 import com.farmec.project.domain.type.secure.auth.Role;
 
+/**
+ * SignUpモデル
+ */
 public class SignUp {
+    // emailアドレス
     private EmailAddress email;
+    
+    // パスワード
     private Password password;
+    
+    // ロール
     private Role role;
 
     public SignUp() {}

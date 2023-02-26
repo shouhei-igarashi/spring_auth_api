@@ -13,10 +13,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_detail_histories")
 public class UserDetailHistory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
     @NotBlank
     @Size(max = 120)
@@ -57,5 +56,33 @@ public class UserDetailHistory {
         postCode = account.getPostCode().toString();
         currentAddress = account.getAddress().toString();
         phoneNumber = account.getPhoneNumber().toString();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public String getCurrentAddress() {
+        return currentAddress;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

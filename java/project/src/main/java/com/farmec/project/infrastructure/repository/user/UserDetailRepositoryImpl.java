@@ -1,10 +1,6 @@
 package com.farmec.project.infrastructure.repository.user;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Repository;
-import org.springframework.util.ObjectUtils;
 
 import com.farmec.project.application.infrastructure.UserDetailRepository;
 import com.farmec.project.domain.model.account.Account;
@@ -15,36 +11,49 @@ import com.farmec.project.infrastructure.repository.user.jpa.UserJpa;
 
 @Repository
 public class UserDetailRepositoryImpl implements UserDetailRepository {
-    private final UserJpa userJpaRepository;
-    private final UserDetailJpa userDetailJpaRepository;
+    private final UserJpa userJpa;
+    private final UserDetailJpa userDetailJpa;
 
-    public UserDetailRepositoryImpl(UserJpa userJpaRepository, UserDetailJpa userDetailJpaRepository) {
-        this.userJpaRepository = userJpaRepository;
-        this.userDetailJpaRepository = userDetailJpaRepository;
+    public UserDetailRepositoryImpl(UserJpa userJpa, UserDetailJpa userDetailJpa) {
+        this.userJpa = userJpa;
+        this.userDetailJpa = userDetailJpa;
     }
 
     @Override
     public Boolean save(Account account) {
-        Optional<User> user = userJpaRepository.findByEmail(account.getEmail().toString());
+        User user = userJpa.findByEmail(account.getEmail().toString());
         
-        if (user.isEmpty()) {
+        if (user == null) {
             return false;
         }
 
-        UserDetail userDetail = new UserDetail(account, user.get());
-        UserDetail resultUserDetail = userDetailJpaRepository.save(userDetail);
-
-        return !ObjectUtils.isEmpty(resultUserDetail);
+        UserDetail userDetail = new UserDetail(account, user);
+        return userDetailJpa.save(userDetail) == null ? false : true;
     }
 
     @Override
-    public void delete(Account account) {
-        List<UserDetail> userDetails = userDetailJpaRepository.findByEmail(account.getEmail().toString());
+    public Boolean delete(Account account) {
+        UserDetail userDetail = userDetailJpa.findByEmail(account.getEmail().toString());
 
-        if (userDetails.isEmpty()) {
-            return;
+        if (userDetail == null) {
+            return true;
         }
 
-        userDetailJpaRepository.delete(userDetails.get(0));
+        userDetailJpa.delete(userDetail);
+        UserDetail deletedUserDetail = userDetailJpa.findByEmail(account.getEmail().toString());
+        
+        return deletedUserDetail == null ? true : false;
+    }
+
+    @Override
+    public Account findByEmail(String email) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findByEmail'");
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'existsByEmail'");
     }
 }

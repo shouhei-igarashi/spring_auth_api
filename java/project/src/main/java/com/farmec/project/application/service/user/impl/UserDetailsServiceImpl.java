@@ -1,12 +1,11 @@
-package com.farmec.project.application.service.secure;
+package com.farmec.project.application.service.user.impl;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.farmec.project.application.infrastructure.UserRepository;
-import com.farmec.project.domain.model.secure.MyUserDetails;
+import com.farmec.project.domain.model.secure.UserDetailsImpl;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -17,10 +16,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        MyUserDetails myUserDetails = userRepository.findByEmail(email);
-        myUserDetails.checkUser();
+    public UserDetailsImpl loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserDetailsImpl userDetails = userRepository.findByEmail(email);
+        userDetails.checkUser();
 
-        return myUserDetails;
+        return userDetails;
     }
 }

@@ -1,16 +1,20 @@
 package com.farmec.project.infrastructure.entity.user;
 
+import java.sql.Date;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.farmec.project.domain.model.account.Account;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.farmec.project.domain.model.secure.SignUp;
+import com.farmec.project.domain.model.secure.UserDetailsImpl;
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
 public class User {
-
     @Id
     @NotBlank
     @Size(max = 50)
@@ -27,6 +31,14 @@ public class User {
     @Size(max = 20)
     @Column(name = "role", nullable = false)
     private String role;
+
+    @CreationTimestamp
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @UpdateTimestamp
+    @Column(name = "update_date")
+    private Date updateDate;
     
     public User() {
     }
@@ -34,13 +46,11 @@ public class User {
     public User(SignUp signUp) {
         this.email = signUp.getEmail().toString();
         this.password = signUp.getPassword().getEncodePassword();
-        this.role =  signUp.getRole().name();
+        this.role =  signUp.getRole().toString();
     }
 
-    public User(Account account) {
-        this.email = account.getEmail().toString();
-        this.password = "detail";
-        this.role = "detail";
+    public User(UserDetailsImpl userDetails) {
+        this.email = userDetails.getUsername();
     }
 
     public String getEmail() {
@@ -53,5 +63,13 @@ public class User {
 
     public String getRole() {
         return role;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
     }
 }

@@ -1,9 +1,9 @@
 package com.farmec.project.presentation.config;
 
-import com.farmec.project.application.service.secure.UserDetailsServiceImpl;
+import com.farmec.project.application.service.user.impl.UserDetailsServiceImpl;
 import com.farmec.project.domain.type.secure.auth.Roles;
 import com.farmec.project.presentation.config.jwt.JwtTokenEndPoint;
-import com.farmec.project.presentation.config.jwt.JwtTokenFilter;
+import com.farmec.project.presentation.config.jwt.JwtOncePerRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,9 +23,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailService;
     private final JwtTokenEndPoint jwtTokenEndPoint;
-    private final JwtTokenFilter jwtTokenFilter;
+    private final JwtOncePerRequestFilter jwtTokenFilter;
     
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailService, JwtTokenEndPoint jwtTokenEndPoint, JwtTokenFilter jwtTokenFilter)
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailService, JwtTokenEndPoint jwtTokenEndPoint, JwtOncePerRequestFilter jwtTokenFilter)
     {
         this.userDetailService = userDetailService;
         this.jwtTokenEndPoint = jwtTokenEndPoint;
@@ -33,38 +33,25 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors()
-                .and()
-                .csrf()
-                .disable();
-
-        http
-                .authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
+        http.authorizeHttpRequests()
+                .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                 .antMatchers("/api/home/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/admin/**").hasAnyAuthority(Roles.ROLE_ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/api/user/**", "/api/user/detail/**").hasAnyAuthority(Roles.ROLE_ADMIN.name(), Roles.ROLE_USER.name())
                 .anyRequest()
                 .authenticated();
-
-        http
-                .exceptionHandling().authenticationEntryPoint(jwtTokenEndPoint)
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling().authenticationEntryPoint(jwtTokenEndPoint)
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
+    DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
         authProvider.setUserDetailsService(userDetailService);
         authProvider.setPasswordEncoder(passwordEncoder());
 
@@ -72,12 +59,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

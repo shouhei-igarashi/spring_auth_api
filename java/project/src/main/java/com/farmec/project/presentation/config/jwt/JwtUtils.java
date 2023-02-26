@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.farmec.project.domain.model.secure.MyUserDetails;
+import com.farmec.project.domain.model.secure.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
 
@@ -25,23 +25,19 @@ public class JwtUtils {
     @Value("${auth.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    public String create(Authentication authentication) {
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
-        MyUserDetails userPrincipal = (MyUserDetails) authentication.getPrincipal();
-
-        return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+        return Jwts.builder().setSubject((userPrincipal.getUsername()))
+                .setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
     }
 
-    public String getUserNameFromJwtToken(String token) {
+    public String getUserFromToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateJwtToken(String authToken) {
+    public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
 
@@ -61,13 +57,9 @@ public class JwtUtils {
         return false;
     }
 
-    public String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7, headerAuth.length());
-        }
-
-        return headerAuth;
+    public String getAuthorizationToken(HttpServletRequest request) {
+        String autorization = request.getHeader("Authorization");
+        return StringUtils.hasText(autorization) && autorization.startsWith("Bearer ")
+            ? autorization.substring(7, autorization.length()) : "";
     }
 }

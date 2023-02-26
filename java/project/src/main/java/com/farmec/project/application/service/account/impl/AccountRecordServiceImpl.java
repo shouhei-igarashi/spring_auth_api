@@ -22,14 +22,9 @@ public class AccountRecordServiceImpl implements AccountRecordService {
     public Boolean createAccount(Account account) {
         userDetailRepository.delete(account);
         
-        if (!userDetailRepository.save(account)) {
-            return false;
-        }
-        
-        if (!userDetailHistoryRepository.save(account)) {
-            return false;
-        }
+        Boolean isCreateUserDetail = userDetailRepository.save(account);
+        userDetailHistoryRepository.save(account);
 
-        return true;
+        return isCreateUserDetail;
     }
 }

@@ -1,9 +1,6 @@
 package com.farmec.project.infrastructure.repository.user;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Repository;
-import org.springframework.util.ObjectUtils;
 
 import com.farmec.project.application.infrastructure.UserDetailHistoryRepository;
 import com.farmec.project.domain.model.account.Account;
@@ -14,26 +11,23 @@ import com.farmec.project.infrastructure.repository.user.jpa.UserJpa;
 
 @Repository
 public class UserDetailHistoryReposiotyImpl implements UserDetailHistoryRepository {
-    private final UserJpa userJpaRepository;
-    private final UserDetailHistoryJpa userDetailHistoryJpaRepository;
+    private final UserJpa userJpa;
+    private final UserDetailHistoryJpa userDetailHistoryJpa;
 
-    public UserDetailHistoryReposiotyImpl(UserJpa userJpaRepository
-        , UserDetailHistoryJpa userDetailHistoryJpaRepository) {
-            this.userJpaRepository = userJpaRepository;
-            this.userDetailHistoryJpaRepository = userDetailHistoryJpaRepository;
+    public UserDetailHistoryReposiotyImpl(UserJpa userJpa, UserDetailHistoryJpa userDetailHistoryJpa) {
+        this.userJpa = userJpa;
+        this.userDetailHistoryJpa = userDetailHistoryJpa;
     }
 
     @Override
     public Boolean save(Account account) {
-        Optional<User> user = userJpaRepository.findByEmail(account.getEmail().toString());
+        User user = userJpa.findByEmail(account.getEmail().toString());
 
-        if (user.isEmpty()) {
+        if (user == null) {
             return false;
         }
 
-        UserDetailHistory userDetailHistory = new UserDetailHistory(account, user.get());
-        UserDetailHistory resultUserDetailHistory = userDetailHistoryJpaRepository.save(userDetailHistory);
-
-        return !ObjectUtils.isEmpty(resultUserDetailHistory);
+        UserDetailHistory userDetailHistory = new UserDetailHistory(account, user);
+        return userDetailHistoryJpa.save(userDetailHistory) == null ? false : true;
     }
 }

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class JwtTokenEndPoint implements AuthenticationEntryPoint {
-
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenEndPoint.class);
 
     @Override

@@ -1,49 +1,53 @@
 package com.farmec.project.infrastructure.repository.user;
 
-import java.util.Optional;
-
+import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.farmec.project.application.infrastructure.UserRepository;
-import com.farmec.project.domain.model.secure.MyUserDetails;
+import com.farmec.project.domain.model.secure.UserDetailsImpl;
 import com.farmec.project.domain.model.secure.SignUp;
-import com.farmec.project.domain.model.secure.SignUpResult;
 import com.farmec.project.infrastructure.entity.user.User;
 import com.farmec.project.infrastructure.repository.user.jpa.UserJpa;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
-
-    private final UserJpa userJpaRepository;
+    private final UserJpa userJpa;
     
-    public UserRepositoryImpl(UserJpa userJpaRepository) {
-        this.userJpaRepository = userJpaRepository;
+    public UserRepositoryImpl(UserJpa userJpa) {
+        this.userJpa = userJpa;
     }
 
     @Override
-    public SignUpResult save(SignUp signup) {
-        User user = new User(signup);
-        User resultUser = userJpaRepository.save(user);
+    public Boolean save(SignUp signUp) {
+        User user = new User(signUp);
+        User resultUser = userJpa.save(user);
 
         if (resultUser == null) {
-            return new SignUpResult();
+            return false;
         }
 
-        return new SignUpResult(resultUser.getEmail(), resultUser.getRole());
+        return true;
     }
 
     @Override
-    public Boolean existsByEmail(SignUp signup){
-        return userJpaRepository.existsByEmail(signup.getEmail().toString());
+    public Boolean existsByEmail(String email){
+        return userJpa.existsByEmail(email);
     }
+
     @Override
-    public MyUserDetails findByEmail(String email){
-        Optional<User> user = userJpaRepository.findByEmail(email);
+    public Boolean existsByUserDetailsImpl(UserDetailsImpl userDetails) {
+        List<User> users = userJpa.findByRole(userDetails.getUsername(), userDetails.getRole());
+        return users.size() > 0 ? true : false;
+    }
+
+    @Override
+    public UserDetailsImpl findByEmail(String email){
+        User user = userJpa.findByEmail(email);
         
-        if (user.isEmpty()) {
-            return new MyUserDetails();
+        if (user == null) {
+            return new UserDetailsImpl();
         }
 
-        return new MyUserDetails(user.get().getEmail(), user.get().getPassword(), user.get().getRole());
+        return new UserDetailsImpl(user.getEmail(), user.getPassword(), user.getRole());
     }
 }

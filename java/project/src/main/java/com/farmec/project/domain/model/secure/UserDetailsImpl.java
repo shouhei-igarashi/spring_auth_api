@@ -13,9 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class MyUserDetails implements UserDetails {
-    private static final long serialVersionUID = 1L;
-
+public class UserDetailsImpl implements UserDetails {
     private String username;
 
     @JsonIgnore
@@ -29,23 +27,18 @@ public class MyUserDetails implements UserDetails {
 
     private Authentication authentication;
 
-    public MyUserDetails() {
+    public UserDetailsImpl() {
         isNotFound = true;
     }
 
-    public MyUserDetails(String username) {
-        this.username = username;
-        isNotFound = true;
-    }
-
-    public MyUserDetails(String username, String password) {
+    public UserDetailsImpl(String username, String password) {
         this.username = username;
         this.password = password;
         
         isNotFound = false;
     }
 
-    public MyUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -53,7 +46,7 @@ public class MyUserDetails implements UserDetails {
         isNotFound = false;
     }
 
-    public MyUserDetails(String username, String password, String role) {
+    public UserDetailsImpl(String username, String password, String role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role));
 
@@ -64,11 +57,15 @@ public class MyUserDetails implements UserDetails {
         isNotFound = false;
     }
 
-    public static MyUserDetails build(Authentication authentication) {
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        myUserDetails.setAuthentication(authentication);
+    public static UserDetailsImpl build(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        userDetails.setAuthentication(authentication);
 
-        return myUserDetails;
+        return userDetails;
+    }
+
+    public UserDetailsImpl build(String role) {
+        return new UserDetailsImpl(this.username, this.password, role);
     }
 
     @Override
@@ -127,7 +124,7 @@ public class MyUserDetails implements UserDetails {
             return false;
         }
            
-        MyUserDetails user = (MyUserDetails) o;
+        UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(username, user.username);
     }
 

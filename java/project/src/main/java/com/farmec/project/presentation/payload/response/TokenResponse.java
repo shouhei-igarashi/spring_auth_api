@@ -1,13 +1,15 @@
 package com.farmec.project.presentation.payload.response;
 
-public class JwtToken {
+public class TokenResponse {
   private String token;
   private String type = "Bearer";
   private String email;
   private String role;
 
-  public JwtToken(String accessToken, String email, String role) {
-    this.token = accessToken;
+  public TokenResponse() {}
+  
+  public TokenResponse(String token, String email, String role) {
+    this.token = token;
     this.email = email;
     this.role = role;
   }
@@ -22,10 +24,6 @@ public class JwtToken {
 
   public String getEmail() {
     return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   public String getRole() {

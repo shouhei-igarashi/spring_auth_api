@@ -1,5 +1,7 @@
 package com.farmec.project.infrastructure.entity.user;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,15 +14,17 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.farmec.project.domain.model.account.Account;
 
 @Entity
 @Table(name = "user_details", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
 public class UserDetail {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
     @NotBlank
     @Size(max = 120)
@@ -50,6 +54,14 @@ public class UserDetail {
     @OneToOne
     @JoinColumn(name = "email")
     private User user;
+
+    @CreationTimestamp
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @UpdateTimestamp
+    @Column(name = "update_date")
+    private Date updateDate;
     
     public UserDetail() {
     }
@@ -61,5 +73,33 @@ public class UserDetail {
         postCode = account.getPostCode().toString();
         currentAddress = account.getAddress().toString();
         phoneNumber = account.getPhoneNumber().toString();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public String getCurrentAddress() {
+        return currentAddress;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public User getUser() {
+        return user;
     }
 }
